@@ -151,9 +151,14 @@ export default defineComponent({
                 });
         };
 
+        const glb = () => {
+            return VRMParser.createVRMFile();
+        };
+
     return {
         takeThumbnail,
-        replaceTexture
+        replaceTexture,
+        glb
     }
 }
 });

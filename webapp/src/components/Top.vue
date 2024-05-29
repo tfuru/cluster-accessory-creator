@@ -76,13 +76,13 @@
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
         <!-- Creator Kit トークン -->
-        <input class="input" type="text" placeholder="Creator Kit トークン" />
+        <input class="input" type="text" placeholder="Creator Kit トークン" v-model="accessToken" />
       </div>
     </div>
 
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
-        <button class="button is-success">
+        <button class="button is-success" @click="clickUploadAccessory">
           <span class="icon is-small">
             <i class="fas fa-upload"></i>
           </span>
@@ -97,12 +97,15 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
+import localStorage from 'localStorage';
 import ModelView from './modules/ModelView.vue';
+import CreatorKitItemApi from './modules/CreatorKitItemApi';
 
 interface TypeModelView {
   // Define the properties and methods of a ModelView instance here
   takeThumbnail: (callback: (dataUrl: string) => void) => void;
   replaceTexture: (raw: ArrayBuffer, callback: ()=>void) => void;
+  glb: () => File;
 }
 
 export default defineComponent({
@@ -118,6 +121,9 @@ export default defineComponent({
     const modelView = ref<TypeModelView | null>(null);
     const thumbnailSrc = ref("");
     thumbnailSrc.value = require("@/assets/512x512.png");
+
+    const accessToken = ref("");
+    accessToken.value = localStorage.getItem('accessToken') ?? ""
 
     const onTexture = (dataUrl: string) => {
       console.log("onTexture", dataUrl);
@@ -155,7 +161,25 @@ export default defineComponent({
         });
       };
       fileReader.readAsArrayBuffer(file);
+    };
 
+    const clickUploadAccessory = (event: any) => {
+      console.log("clickUploadAccessory");
+      // アクセサリをアップロードする
+      if (modelView.value == null) return;
+      if (accessToken.value == "") return;
+      localStorage.setItem('accessToken', accessToken.value);
+
+      const glb = modelView.value.glb();
+      const icon = new File([thumbnailSrc.value], "thumbnail.png", { type: "image/png" });
+
+      CreatorKitItemApi.uploadAccessory(accessToken.value, glb, icon, false)
+        .then((response) => {
+          console.log("uploadAccessory success", response);
+        })
+        .catch((error) => {
+          console.error("uploadAccessory error", error);
+        });
     };
 
     return {
@@ -163,10 +187,12 @@ export default defineComponent({
       textureSrc,
       thumbnailSrc,
       modelView,
+      accessToken,
       clickTakeThumbnail,
       onTexture,
       clickDownloadTexture,
-      clickUploadTexture
+      clickUploadTexture,
+      clickUploadAccessory
     };
   }
 });

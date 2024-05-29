@@ -11,6 +11,8 @@
     "bulma": "^1.0.1",
     "core-js": "^3.8.3",
     "font-awesome": "^4.7.0",
+    "jszip": "^3.10.1",
+    "localStorage": "^1.0.4",
     "sass-loader": "^14.2.1",
     "three": "^0.164.1",
     "vue": "^3.2.13",

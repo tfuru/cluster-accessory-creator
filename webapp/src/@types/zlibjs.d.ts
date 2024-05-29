@@ -1,0 +1,1 @@
+declare module 'zlibjs/bin/zlib.min.js';
