@@ -42,13 +42,15 @@ class CreatorKitItemApi {
         // glb と icon を zip に圧縮する
         const zipFile = await this.createZipFile(accessToken, glb, icon);
         
+        /*
         // 確認用にここで zipFile をダウンロードしてみる
         const url = URL.createObjectURL(zipFile);
         const a = document.createElement('a');
         a.href = url;
         a.download = 'item_template.zip';
         a.click();
-        
+        */
+
         const headers = {
             "Content-Type": "application/json",
             "X-Cluster-Access-Token": accessToken,
@@ -80,17 +82,20 @@ class CreatorKitItemApi {
         const forms = data.form;
         console.log(`form`);
         for (const [key, value] of Object.entries(forms)) {
-            const k = (key as string).trim();
-            const v = (value as string).trim();
-            formDatas.set(k, v);
+            const k = key;
+            const v = (typeof value === "string") ? value : JSON.stringify(value);
+            formDatas.append(k, v);
             console.log(` `, k, v);
         }
-        formDatas.set("item.zip", zipFile);
+        formDatas.append("file", zipFile, "item.zip");
 
         const uploadUrl = data.uploadUrl;
         const uploadResponse = await fetch(uploadUrl, {
             method: "POST",
-            body: formDatas
+            body: formDatas,
+            headers: {
+
+            }
         });
 
         const uploadData = await uploadResponse.json();
