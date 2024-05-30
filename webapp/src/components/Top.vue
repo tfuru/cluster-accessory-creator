@@ -170,10 +170,10 @@ export default defineComponent({
       if (accessToken.value == "") return;
       localStorage.setItem('accessToken', accessToken.value);
 
-      const glb = modelView.value.glb();
+      const glb = new File([modelView.value.glb()], "item_template.glb", { type: "model/gltf-binary" });
       const icon = new File([thumbnailSrc.value], "thumbnail.png", { type: "image/png" });
 
-      CreatorKitItemApi.uploadAccessory(accessToken.value, glb, icon, false)
+      CreatorKitItemApi.uploadAccessory(accessToken.value, glb, icon)
         .then((response) => {
           console.log("uploadAccessory success", response);
         })

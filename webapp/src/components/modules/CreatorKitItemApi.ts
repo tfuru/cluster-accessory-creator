@@ -1,7 +1,10 @@
 /** アップロード API
  * 
+ *  ドキュメント
  *  https://docs.cluster.mu/creatorkit/pitm/api-spec/
- * 
+ *  
+ *  参考コード
+ *  https://github.com/ClusterVR/PITMSample/blob/main/python/cluster_api.py
  */
 
 import JSZip from 'jszip';
@@ -16,16 +19,36 @@ class CreatorKitItemApi {
     // バージョン
     private static VERSION = "0.5";
 
-    // アクセサリーアップロード
-    public static uploadAccessory = async (accessToken: string, glb: File, icon: File, isBeta: boolean) => {
+    // アップロード用のZIPファイルを作成
+    private static createZipFile = async (accessToken: string, glb: File, icon: File) => {
         // glb と icon を zip に圧縮する
         const zip = new JSZip();
         zip.file(glb.name, glb);
         zip.file(icon.name, icon);
 
-        const compressData = await zip.generateAsync({type:'blob'});
-        const zipFile = new Blob([compressData], { 'type': 'application/zip' });
+        const compressData = await zip.generateAsync({
+            type:'blob',
+            compression: 'DEFLATE',
+            compressionOptions: { 
+                level: 9 
+            }
+        });
+        const zipFile = new File([compressData], 'item.zip', { 'type': 'application/zip' });
+        return zipFile;
+    }
 
+    // アクセサリーアップロード
+    public static uploadAccessory = async (accessToken: string, glb: File, icon: File) => {
+        // glb と icon を zip に圧縮する
+        const zipFile = await this.createZipFile(accessToken, glb, icon);
+        
+        // 確認用にここで zipFile をダウンロードしてみる
+        const url = URL.createObjectURL(zipFile);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'item_template.zip';
+        a.click();
+        
         const headers = {
             "Content-Type": "application/json",
             "X-Cluster-Access-Token": accessToken,
@@ -38,10 +61,10 @@ class CreatorKitItemApi {
         const json = {
             "contentType": "application/zip",
             "fileName": "item_template.zip",
-            "fileSize": zipFile.size,
-            "isBeta": isBeta
+            "fileSize": zipFile.size
         };
-        console.log(`json`, json);
+        // console.log(`json`, json);
+        console.log(`fileSize`, zipFile.size, 20480);
 
         // アップロードするための URL などを取得する
         const response = await fetch(this.ENDPOINT_URL + this.API_ACCESSORY_TEMPLATE, {
@@ -52,24 +75,27 @@ class CreatorKitItemApi {
         const data = await response.json();
         console.log(`data`, data);
 
-        // S3へのアップロードで CORS のエラーが出る
-        // function で リクエストをプロキシする
-        
-        // uploadUrl に対して form で zip をアップロードする
         const formDatas = new FormData();
-        formDatas.append("item.zip", zipFile);
-        const uploadUrl = data.uploadUrl;
-        const form = data.form;
+        // uploadUrl に対して FormData で zip をアップロードする
+        const forms = data.form;
+        console.log(`form`);
+        for (const [key, value] of Object.entries(forms)) {
+            const k = (key as string).trim();
+            const v = (value as string).trim();
+            formDatas.set(k, v);
+            console.log(` `, k, v);
+        }
+        formDatas.set("item.zip", zipFile);
 
+        const uploadUrl = data.uploadUrl;
         const uploadResponse = await fetch(uploadUrl, {
             method: "POST",
-            headers: form,
             body: formDatas
         });
 
         const uploadData = await uploadResponse.json();
         console.log(`uploadData`, uploadData);
-
+        
         // ステータス確認 
         const statusApiUrl = data.statusApiUrl;
         /*
@@ -78,6 +104,7 @@ class CreatorKitItemApi {
             headers: headers
         });
         */
+
         return uploadData;
     };
 }

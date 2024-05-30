@@ -23,10 +23,6 @@ export default defineComponent({
         'onTexture',
     ],
     setup(props, { emit }) {
-        console.log(props.accessoryTemplateName);
-        console.log(`width ${props.width}`);
-        console.log(`height ${props.height}`);
-
         const scene = new THREE.Scene();
         let camera: any = null;
         let renderer: any = null;
@@ -127,13 +123,34 @@ export default defineComponent({
 
         };
 
+        // テクスチャをリサイズする
+        const resizeTexture = (dataUrl: string, width: number, height: number, callback: (dataUrl: string)=> void) => {
+            // console.log("resizeTexture", raw);
+            const image = new Image();
+            image.onload = () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                if (ctx == null) return;
+                ctx.drawImage(image, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL("image/png");
+                callback(dataUrl);
+            };
+            image.src = dataUrl;
+        };
+
         // サムネイル画像を撮影する
         const takeThumbnail = (callback: (dataUrl: string)=> void) => {
             const viewerElement = document.getElementById("canvas");
             if (viewerElement == null) return;
             const canvas = viewerElement as HTMLCanvasElement;
             const dataUrl = canvas.toDataURL("image/png");
-            callback(dataUrl);
+
+            const size = 256;
+            resizeTexture(dataUrl, size, size, (dataUrl: string) => {
+                callback(dataUrl);
+            });
         };
 
         // テクスチャを置き換える
