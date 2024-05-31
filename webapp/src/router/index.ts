@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'home',
     meta: {
-      title: 'cluster向け 簡単アクセサリー作成ツール',
+      title: 'アクセサリークリエイター - cluster向け 簡単アクセサリー作成ツール',
     },
     component: HomeView
   },
