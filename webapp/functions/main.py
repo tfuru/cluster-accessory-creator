@@ -20,12 +20,15 @@ CORS(app)
 
 @app.post("/proxy")
 def proxy():
+    name = flask.request.files['name']
     thumbnail = flask.request.files['thumbnail']
     glb = flask.request.files['glb']
     accessToken = flask.request.form['accessToken']
     
     thumbnail_blob = thumbnail.read()
     glb_blob = glb.read()
+    
+    # TODO glb 内の 拡張部分にある アイテム名の変更
 
     client = upload_api_client.UploadApiClient(accessToken)
     result = client.upload_accessory(thumbnail_blob=thumbnail_blob, pitm_blob=glb_blob)

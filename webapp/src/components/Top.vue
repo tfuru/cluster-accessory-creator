@@ -5,7 +5,7 @@
         <div class="select">
           <select v-model="accessoryTemplateName">
             <option value="">アクセサリを選択してください</option>
-            <option value="umbrella">開いた傘</option>
+            <!-- <option value="umbrella">開いた傘</option> -->
             <option value="kimoneze">キモネーゼ</option>
           </select>
         </div>
@@ -80,11 +80,13 @@
       </div>
     </div>
 
+    <!--
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
         <input class="input" type="text" placeholder="アクセサリー名" v-model="accessoryName" />
       </div>
     </div>
+    -->
 
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
@@ -189,7 +191,7 @@ export default defineComponent({
       const glb = await modelView.value.glb();
       const icon = new File([thumbnailBlob], "icon.png", { type: "image/png" });
 
-      await CreatorKitItemApi.uploadAccessory(accessToken.value, accessoryName,  glb, icon, (status) =>{
+      await CreatorKitItemApi.uploadAccessory(accessToken.value, accessoryName.value,  glb, icon, (status) =>{
         console.log("uploadAccessory", status);
         // TODO アップロード状況 を 画面更新
         switch(status) {
