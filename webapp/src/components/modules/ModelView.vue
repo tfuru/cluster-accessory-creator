@@ -55,8 +55,8 @@ export default defineComponent({
                 scene.remove(gltf);
             }
 
-            camera = new THREE.PerspectiveCamera(75, props.width! / props.height!, 0.1, 1000);
-            camera.position.set(0, 0, 1);
+            camera = new THREE.PerspectiveCamera(75, props.width! / props.height!, 0.1, 100);
+            camera.position.set(0, 0, 0.5);
 
             renderer = new THREE.WebGLRenderer({ canvas: viewerElement, preserveDrawingBuffer: true });
             renderer.setSize(props.width!, props.height!);
@@ -146,11 +146,13 @@ export default defineComponent({
             if (viewerElement == null) return;
             const canvas = viewerElement as HTMLCanvasElement;
             const dataUrl = canvas.toDataURL("image/png");
-
+            callback(dataUrl);
+            /*
             const size = 256;
             resizeTexture(dataUrl, size, size, (dataUrl: string) => {
                 callback(dataUrl);
             });
+            */
         };
 
         // テクスチャを置き換える

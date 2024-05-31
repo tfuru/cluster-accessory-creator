@@ -11,7 +11,7 @@ import JSZip from 'jszip';
 
 class CreatorKitItemApi {
     private static PROXY_API_URL = (location.hostname === 'localhost') 
-        ? 'http://localhost:5001/cluster-accessory-creator/us-central1/api/proxy' 
+        ? 'http://localhost:5001/cluster-accessory-creator/asia-northeast1/api/proxy'
         : '/api/proxy';
 
     // 確認用のダウンロード処理
