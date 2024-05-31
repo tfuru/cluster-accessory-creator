@@ -168,8 +168,8 @@ export default defineComponent({
                 });
         };
 
-        const glb = () => {
-            return VRMParser.createVRMFile();
+        const glb = async () => {
+            return await VRMParser.createVRMFile();
         };
 
     return {

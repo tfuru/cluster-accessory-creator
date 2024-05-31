@@ -82,6 +82,12 @@
 
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
+        <input class="input" type="text" placeholder="アクセサリー名" v-model="accessoryName" />
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
         <button class="button is-success" @click="clickUploadAccessory">
           <span class="icon is-small">
             <i class="fas fa-upload"></i>
@@ -125,6 +131,9 @@ export default defineComponent({
     const accessToken = ref("");
     accessToken.value = localStorage.getItem('accessToken') ?? ""
 
+    const accessoryName = ref("");
+    accessoryName.value = localStorage.getItem('accessoryName') ?? ""
+
     const onTexture = (dataUrl: string) => {
       console.log("onTexture", dataUrl);
       textureSrc.value = dataUrl;
@@ -163,23 +172,38 @@ export default defineComponent({
       fileReader.readAsArrayBuffer(file);
     };
 
-    const clickUploadAccessory = (event: any) => {
+    const convertDataUrl = async (dataUrl: string) => { 
+      return await (await fetch(dataUrl)).blob()
+    }
+
+    const clickUploadAccessory = async (event: any) => {
       console.log("clickUploadAccessory");
       // アクセサリをアップロードする
       if (modelView.value == null) return;
       if (accessToken.value == "") return;
       localStorage.setItem('accessToken', accessToken.value);
+      localStorage.setItem('accessoryName', accessoryName.value);
+      
+      const thumbnailBlob = await convertDataUrl(thumbnailSrc.value);
 
-      const glb = new File([modelView.value.glb()], "item_template.glb", { type: "model/gltf-binary" });
-      const icon = new File([thumbnailSrc.value], "thumbnail.png", { type: "image/png" });
+      const glb = await modelView.value.glb();
+      const icon = new File([thumbnailBlob], "icon.png", { type: "image/png" });
 
-      CreatorKitItemApi.uploadAccessory(accessToken.value, glb, icon)
-        .then((response) => {
-          console.log("uploadAccessory success", response);
-        })
-        .catch((error) => {
-          console.error("uploadAccessory error", error);
-        });
+      await CreatorKitItemApi.uploadAccessory(accessToken.value, accessoryName,  glb, icon, (status) =>{
+        console.log("uploadAccessory", status);
+        // TODO アップロード状況 を 画面更新
+        switch(status) {
+          case "COMPLETED":
+            alert("アップロードが完了しました");
+            break;
+          case "TIMEOUT":
+          case "ERROR":
+            alert(`アップロードに失敗しました ステータス: ${status}`);
+            break;
+          default:
+            break;
+        }
+      });
     };
 
     return {
@@ -188,6 +212,7 @@ export default defineComponent({
       thumbnailSrc,
       modelView,
       accessToken,
+      accessoryName,
       clickTakeThumbnail,
       onTexture,
       clickDownloadTexture,

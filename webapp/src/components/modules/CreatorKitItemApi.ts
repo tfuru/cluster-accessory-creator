@@ -10,17 +10,22 @@
 import JSZip from 'jszip';
 
 class CreatorKitItemApi {
-    private static ENDPOINT_URL = "https://api.cluster.mu/v1/upload";
-    private static API_ACCESSORY_TEMPLATE = "/accessory_template/policies";
-    private static API_ITEM_TEMPLATE = "/item_template/policies";
+    private static PROXY_API_URL = (location.hostname === 'localhost') 
+        ? 'http://localhost:5001/cluster-accessory-creator/us-central1/api/proxy' 
+        : '/api/proxy';
 
-    // ツール名
-    private static TOOL_NAME = "itemcreator";
-    // バージョン
-    private static VERSION = "0.5";
+    // 確認用のダウンロード処理
+    private static downloadFile = async (file: File) => {
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        a.click();
+    };
+
 
     // アップロード用のZIPファイルを作成
-    private static createZipFile = async (accessToken: string, glb: File, icon: File) => {
+    private static createZipFile = async (glb: File, icon: File) => {
         // glb と icon を zip に圧縮する
         const zip = new JSZip();
         zip.file(glb.name, glb);
@@ -34,83 +39,72 @@ class CreatorKitItemApi {
             }
         });
         const zipFile = new File([compressData], 'item.zip', { 'type': 'application/zip' });
+        this.downloadFile(zipFile);
         return zipFile;
     }
-
+    
     // アクセサリーアップロード
-    public static uploadAccessory = async (accessToken: string, glb: File, icon: File) => {
-        // glb と icon を zip に圧縮する
-        const zipFile = await this.createZipFile(accessToken, glb, icon);
-        
-        /*
-        // 確認用にここで zipFile をダウンロードしてみる
-        const url = URL.createObjectURL(zipFile);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'item_template.zip';
-        a.click();
-        */
+    public static uploadAccessory = async (accessToken: string, name: string, glb: File, thumbnail: File, callback:(status: string) => void) => {
+        // Zipファイルを作成
+        // const zip = await this.createZipFile(glb, thumbnail);
 
-        const headers = {
-            "Content-Type": "application/json",
-            "X-Cluster-Access-Token": accessToken,
-            "X-Cluster-App-Version": "2.0.0",
-            "X-Cluster-Device": "ClusterCreatorKit",
-            "X-Cluster-Platform": "ClusterCreatorKit",
-            "X-Cluster-Platform-Version": `api-${this.TOOL_NAME}-${this.VERSION}`
-        };
-
-        const json = {
-            "contentType": "application/zip",
-            "fileName": "item_template.zip",
-            "fileSize": zipFile.size
-        };
-        // console.log(`json`, json);
-        console.log(`fileSize`, zipFile.size, 20480);
-
-        // アップロードするための URL などを取得する
-        const response = await fetch(this.ENDPOINT_URL + this.API_ACCESSORY_TEMPLATE, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(json)
-        });
-        const data = await response.json();
-        console.log(`data`, data);
-
+        // アクセストークンとZipファイルを 中継 Api 送信する
         const formDatas = new FormData();
-        // uploadUrl に対して FormData で zip をアップロードする
-        const forms = data.form;
-        console.log(`form`);
-        for (const [key, value] of Object.entries(forms)) {
-            const k = key;
-            const v = (typeof value === "string") ? value : JSON.stringify(value);
-            formDatas.append(k, v);
-            console.log(` `, k, v);
-        }
-        formDatas.append("file", zipFile, "item.zip");
+        formDatas.append("accessToken", accessToken);
+        formDatas.append("name", name);
+        formDatas.append("thumbnail", thumbnail);
+        formDatas.append("glb", glb);
 
-        const uploadUrl = data.uploadUrl;
-        const uploadResponse = await fetch(uploadUrl, {
+        fetch(this.PROXY_API_URL, {
             method: "POST",
-            body: formDatas,
-            headers: {
+            body: formDatas
+        }).then((response) => {
+            return response.json();
+        })
+        .then((json) => {
+            console.log(`json`, json);
 
-            }
+            const accessoryTemplateID = json.accessoryTemplateID;
+            const statusApiUrl = json.statusApiUrl;
+
+            // アップロードステータスを確認
+            let count = 0;
+            const MAX_COUNT = 10;
+            const interval = setInterval(() => {
+                count++;
+                if (count > MAX_COUNT) {
+                    console.log(`アップロード タイムアウト`);
+                    clearInterval(interval);
+                    callback("TIMEOUT");
+                    return;
+                }
+                fetch(statusApiUrl, {
+                    method: "GET"
+                }).then((response) => {
+                    return response.json();
+                })
+                .then((json) => {
+                    // console.log(`status`, json);
+                    const status = json.status.toUpperCase();
+                    switch (status) {
+                        case 'VALIDATING':
+                            console.log(`アップロード中`);
+                            break;
+                        case 'COMPLETED':
+                            console.log(`アップロード完了`);
+                            clearInterval(interval);
+                            break;
+                        case 'ERROR':
+                        default:
+                            // エラー
+                            console.log(`アップロード失敗`);
+                            clearInterval(interval);
+                            break;
+                    }
+                    callback(status);
+                });
+            }, 3000);
         });
-
-        const uploadData = await uploadResponse.json();
-        console.log(`uploadData`, uploadData);
-        
-        // ステータス確認 
-        const statusApiUrl = data.statusApiUrl;
-        /*
-        const statusResponse = await fetch(statusApiUrl, {
-            method: "GET",
-            headers: headers
-        });
-        */
-
-        return uploadData;
     };
 }
 
