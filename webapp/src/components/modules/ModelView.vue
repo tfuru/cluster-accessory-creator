@@ -55,8 +55,11 @@ export default defineComponent({
                 scene.remove(gltf);
             }
 
-            camera = new THREE.PerspectiveCamera(75, props.width! / props.height!, 0.1, 100);
-            camera.position.set(0, 0, 0.5);
+            // camera = new THREE.PerspectiveCamera(75, props.width! / props.height!, 0.1, 100);
+            // 平行投影カメラ
+            const size = 0.2;
+            camera = new THREE.OrthographicCamera(-size, +size, size, -size, 0, 100);
+            camera.position.set(0, 0, 1);
 
             renderer = new THREE.WebGLRenderer({ canvas: viewerElement, preserveDrawingBuffer: true });
             renderer.setSize(props.width!, props.height!);
@@ -96,9 +99,10 @@ export default defineComponent({
         const loadShowGlb = (path: string) => {
             const loader = new GLTFLoader();
             loader.load(path, (gltf: any) => {
-                console.log(gltf);
+                console.log("gltf", gltf);
                 // 検索するために名前を設定
                 gltf.scene.name = "gltf";
+                gltf.scene.position.set(0, -0.15, 0);
                 scene.add( gltf.scene );
             });
 
