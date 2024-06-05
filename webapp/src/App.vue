@@ -6,6 +6,7 @@
         <nav>
           <router-link to="/">ホーム</router-link>
           | <router-link to="/about">使い方</router-link>
+          | <a href="https://forms.gle/pz1HamLdBKB5RrHq7">アイテム応募</a>
         </nav>        
       </div>
     </div>
