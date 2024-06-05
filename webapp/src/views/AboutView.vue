@@ -5,6 +5,8 @@
     <div>
       <h2>cluster アクセサリーとは?</h2>
       <div>cluster上でアバターに装着できるアイテムで、アバターに装着して手軽に個性を出すことが出来ます</div>
+    </div>
+    <div>
       <div>
         <ol>
           <li>作りたいアクセサリーを選択</li>
@@ -17,10 +19,18 @@
         </ol>
       </div>
     </div>
+    
+    <div>
+      <h1>アクセサリーにしたい アイテム応募フォーム</h1>
+      <a href="https://forms.gle/pz1HamLdBKB5RrHq7">フォーム</a>
+      <div>アクセサリーにしたいアイテムがあればこのフォームからモデルデータを応募してもらえると嬉しいです</div>      
+    </div>
+
     <div>
       <h1>作者</h1>
       <div><a href="https://x.com/t_furu">@t_furu</a></div>
     </div>
+
     <div>
       <h3>参考</h3>
       <div>
