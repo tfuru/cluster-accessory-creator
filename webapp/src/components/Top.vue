@@ -10,13 +10,15 @@
 
     <div class="columns container">
       <div class="column is-half">
-        <div class="select">
-          <select v-model="accessoryTemplateName">
-            <option value="">作りたいアクセサリを選択してください</option>
-            <!-- <option value="umbrella">開いた傘</option> -->
-            <option value="kimoneze">キモネーゼ</option>
-          </select>
-          <ModelView ref="modelView" class="model" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
+        <div class="model">
+          <div class="select">
+            <select v-model="accessoryTemplateName">
+              <option value="">作りたいアクセサリを選択してください</option>
+              <!-- <option value="umbrella">開いた傘</option> -->
+              <option value="kimoneze">キモネーゼ</option>
+            </select>
+            <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
+          </div>
         </div>
       </div>
 
@@ -68,8 +70,8 @@
       <div class="column is-half is-offset-one-quarter">
         <!-- Creator Kit トークン -->
         <input class="input" type="text" placeholder="Creator Kit トークン" v-model="accessToken" />
-        <div>※<a href="https://cluster.mu/account/tokens">Creator Kit トークン</a>はリンク先で取得する</div>
-        <div>アップロード処理の為に一時的に作者サーバに送信されますが、保存などはしていない為、比較的安全です</div>
+        <div>※&nbsp;<a href="https://cluster.mu/account/tokens">Creator Kit トークン</a>はリンク先で取得する</div>
+        <div>アップロード処理の為に一時的に作者サーバに送信されますが、<br>サーバに保存などはしていない為、比較的安全です</div>
       </div>
     </div>
 
@@ -83,7 +85,7 @@
 
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
-        <button class="button is-success" @click="clickUploadAccessory">
+        <button class="button is-info" @click="clickUploadAccessory">
           <span class="icon is-small">
             <i class="fas fa-upload"></i>
           </span>
@@ -230,7 +232,11 @@ export default defineComponent({
   }
 }
 
-.model {
+.file-label, .image {
+  margin: 0 auto;
+}
+
+.modelview {
   width: 512px;
   height: 512px;
   background-color: lightblue;
@@ -242,8 +248,26 @@ export default defineComponent({
   height: 256px;
 }
 
-.file-label, .image {
-  margin: 0 auto;
-}
+@media screen and (max-width: 768px) {
+  .container > .column {
+    border: none;
+  }
 
+  .column > .model, .column > .texture {
+    display: block;
+    margin: auto 0;
+  }
+  
+  .column > .model {
+    width: 560px;
+    height: 560px;
+  }
+
+  .texture > .image, .thumbnail > .image {
+    margin: 0;
+    width: 256px;
+    height: 256px;
+  }
+  
+}
 </style>
