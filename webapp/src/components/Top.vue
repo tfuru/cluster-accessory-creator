@@ -1,75 +1,66 @@
 <template>
   <div class="top">
+    
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
+        <h1>[非公式] cluster アクセサリークリエイター </h1>
+        <div>cluster上でアバターに装着できるアクセサリーアイテムを Webブラウ垢ら作成できるツールです</div>
+      </div>
+    </div>
+
+    <div class="columns container">
+      <div class="column is-half">
         <div class="select">
           <select v-model="accessoryTemplateName">
-            <option value="">アクセサリを選択してください</option>
+            <option value="">作りたいアクセサリを選択してください</option>
             <!-- <option value="umbrella">開いた傘</option> -->
             <option value="kimoneze">キモネーゼ</option>
           </select>
+          <ModelView ref="modelView" class="model" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
         </div>
       </div>
-    </div>
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <ModelView ref="modelView" class="model" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
-      </div>
-    </div>
 
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <div>テクスチャ</div>
-        <figure class="image">
-          <img :src="textureSrc" alt="texture">
-        </figure>
-      </div>
-    </div>
+      <div class="column">
+        <div class="texture">
+          <div>テクスチャ</div>
+          <figure class="image">
+            <img :src="textureSrc" alt="texture">
+          </figure>
 
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <button class="button is-success" @click="clickDownloadTexture">
-          <span class="icon is-small">
-            <i class="fas fa-camera"></i>
-          </span>
-          <span>ダウンロード</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <div class="file is-center">
-          <label class="file-label">
-            <input class="file-input" type="file" name="resume" @change="clickUploadTexture"/>
-            <span class="file-cta">
-              <span class="file-icon">
-                <i class="fas fa-upload"></i>
+          <div class="buttons">
+            <button class="button is-success" @click="clickDownloadTexture">
+              <span class="icon is-small">
+                <i class="fas fa-camera"></i>
               </span>
-              <span class="file-label">アップロード</span>
-            </span>
-          </label>
+              <span>ダウンロード</span>
+            </button>
+            <div class="file is-center">
+              <label class="file-label">
+                <input class="file-input" type="file" name="resume" @change="clickUploadTexture"/>
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">アップロード</span>
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <div>サムネイル</div>
-        <figure class="image">
-          <img :src="thumbnailSrc" alt="texture" >
-        </figure>
-      </div>
-    </div>
-
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <button class="button is-success" @click="clickTakeThumbnail" >
-          <span class="icon is-small">
-            <i class="fas fa-camera"></i>
-          </span>
-          <span>サムネイル撮影</span>
-        </button>
+        <div class="thumbnail">
+          <div>サムネイル</div>
+          <figure class="image">
+            <img :src="thumbnailSrc" alt="texture" >
+          </figure>
+          <div class="buttons">
+            <button class="button is-success" @click="clickTakeThumbnail" >
+              <span class="icon is-small">
+                <i class="fas fa-camera"></i>
+              </span>
+              <span>サムネイル撮影</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -77,6 +68,8 @@
       <div class="column is-half is-offset-one-quarter">
         <!-- Creator Kit トークン -->
         <input class="input" type="text" placeholder="Creator Kit トークン" v-model="accessToken" />
+        <div>※<a href="https://cluster.mu/account/tokens">Creator Kit トークン</a>はリンク先で取得する</div>
+        <div>アップロード処理の為に一時的に作者サーバに送信されますが、保存などはしていない為、比較的安全です</div>
       </div>
     </div>
 
@@ -228,12 +221,25 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.model, .image {
-  margin: 0 auto;
+.container > .column {
+  border: 1px solid #ccc;
+  text-align: left;
+
+  .buttons {
+    margin-top: 10px;
+  }
+}
+
+.model {
   width: 512px;
   height: 512px;
-
   background-color: lightblue;
+}
+
+.texture > .image, .thumbnail > .image {
+  margin: 0;
+  width: 256px;
+  height: 256px;
 }
 
 .file-label, .image {
