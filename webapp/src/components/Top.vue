@@ -92,9 +92,16 @@
           <span>clusterにアップロード</span>
         </button>
       </div>
-    </div>    
+    </div>  
 
-  </div>
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        <div>アップロードしたアクセサリーを確認するには、cluster 公式サイトで確認してください</div>
+        <a href="https://cluster.mu/account/contents/accessories">cluster 公式 -> マイコンテンツ -> アクセサリー</a>
+      </div>
+    </div>
+    
+  </div>  
 </template>
 
 <script lang="ts">
