@@ -4,7 +4,7 @@
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
         <h1>[非公式] cluster アクセサリークリエイター </h1>
-        <div>cluster上でアバターに装着できるアクセサリーアイテムを Webブラウ垢ら作成できるツールです</div>
+        <div>cluster上でアバターに装着できるアクセサリーアイテムを Webブラウザから作成できるツールです</div>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
           <div class="select">
             <select v-model="accessoryTemplateName">
               <option value="">作りたいアクセサリを選択してください</option>
-              <!-- <option value="umbrella">開いた傘</option> -->
+              <option value="umbrella">開いた傘</option>
               <option value="kimoneze">キモネーゼ</option>
             </select>
             <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
