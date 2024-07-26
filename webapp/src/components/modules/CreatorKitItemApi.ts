@@ -96,9 +96,12 @@ class CreatorKitItemApi {
                             break;
                         case 'ERROR':
                         default:
-                            // エラー
-                            console.log(`アップロード失敗`);
-                            clearInterval(interval);
+                            {
+                                // エラー
+                                const localized_messages = json.localized_messages?.join('\n');
+                                console.log(`アップロード失敗\n${localized_messages}`);
+                                clearInterval(interval);
+                            }
                             break;
                     }
                     callback(status);

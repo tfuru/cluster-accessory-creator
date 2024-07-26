@@ -69,6 +69,7 @@ class VRMParser {
         }
         console.log('chunk0', VRMParser.chunk0 )
         VRMParser.json = VRMParser.chunk0.json
+        console.log('json', VRMParser.json )
 
         // Chunks 1 を 取得
         const chunk1Offset = VRMParser.CHUNK_HEADER_SIZE 
@@ -222,6 +223,20 @@ class VRMParser {
         })
     }
 
+    // マテリアルに PbrMetallicRoughness を追加する
+    private static addPbrMetallicRoughness = (material: any) => {
+        material.pbrMetallicRoughness = {
+            baseColorFactor: [1, 1, 1, 1],
+            metallicFactor: 1,
+            roughnessFactor: 1,
+            baseColorTexture: {
+                index: 0,
+                texCoord: 0
+            }
+        }
+        return material;
+    }
+
     // テクスチャを置き換えて json(chunk0), chunk1 を再構築する
     public static replaceImage = (img: any, fileBuf: ArrayBuffer): Promise<void> => {
         console.log('replaceImage', img, fileBuf)
@@ -253,6 +268,19 @@ class VRMParser {
                 image = VRMParser.json.images.filter((v: any) => (v.name == img.name))[0]
             }
             console.log('-- image', image)
+
+            // pbrMetallicRoughness が無いとビューアーに表示されないので追加する
+            VRMParser.json.materials.forEach((material: any) => {
+                console.log('material', material)
+                if (material.pbrMetallicRoughness == null) {
+                    material = VRMParser.addPbrMetallicRoughness(material);
+                }
+                if (material.pbrMetallicRoughness.baseColorTexture != null) {
+                    if (material.pbrMetallicRoughness.baseColorTexture.index == image.index) {
+                        material.pbrMetallicRoughness.baseColorTexture.index = img.index
+                    }
+                }
+            });
 
             // console.log('image', image)
             const distChunkDataListIndex = image.bufferView
