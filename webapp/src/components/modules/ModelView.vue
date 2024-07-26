@@ -53,13 +53,14 @@ export default defineComponent({
             const gltf = scene.getObjectByName("gltf");
             if (gltf != null) {
                 scene.remove(gltf);
+                return;
             }
 
             // camera = new THREE.PerspectiveCamera(75, props.width! / props.height!, 0.1, 100);
             // 平行投影カメラ
-            const size = 0.2;
-            camera = new THREE.OrthographicCamera(-size, +size, size, -size, 0, 100);
-            camera.position.set(0, 0, 1);
+            const size = 0.3;
+            camera = new THREE.OrthographicCamera(-size, +size, size, -size, 0, 10);
+            camera.position.set(0, 0, 1.0);
 
             renderer = new THREE.WebGLRenderer({ canvas: viewerElement, preserveDrawingBuffer: true });
             renderer.setSize(props.width!, props.height!);
@@ -70,7 +71,7 @@ export default defineComponent({
             scene.add(ambientLight);
 
             // ライトを作成
-            const intensity = 1.5;
+            const intensity = 1.5 * 3;
             {
                 const light = new THREE.DirectionalLight(0xffffff, intensity);
                 light.position.set(0, 2, -2);
