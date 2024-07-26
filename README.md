@@ -44,3 +44,8 @@ firebase deploy
 4. アクセサリー glb,サムネイル画像 をアップロード
 5. 次回から Creator Kit トークン は保存される
 
+
+# glb 出力
+ chunk0 json に `pbrMetallicRoughness` が必要  
+ UniGLTF -> export -> glb で出力すると `pbrMetallicRoughness` が追加される  
+    

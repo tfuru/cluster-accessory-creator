@@ -14,6 +14,7 @@
           <div class="select">
             <select v-model="accessoryTemplateName">
               <option value="">作りたいアクセサリを選択してください</option>
+              <option value="tasuki">シンプルなたすき [かわしぃ]</option>
               <option value="umbrella">開いた傘</option>
               <option value="kimoneze">キモネーゼ</option>
             </select>
