@@ -19,6 +19,14 @@
               <option value="kimoneze">キモネーゼ</option>
             </select>
             <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
+<!--
+            <button class="button is-success" @click="clickDownloadGlb">
+              <span class="icon is-small">
+                <i class="fas fa-camera"></i>
+              </span>
+              <span>ダウンロード</span>
+            </button>
+-->
           </div>
         </div>
       </div>
@@ -211,6 +219,18 @@ export default defineComponent({
       });
     };
 
+    const clickDownloadGlb = async (event: any) => {
+      console.log("clickDownloadGlb");
+      // glb をダウンロードする
+      if (modelView.value == null) return;
+      const glb = await modelView.value.glb();
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(glb);
+      a.download = "accessory_template.glb";
+      a.click();
+    };
+
     return {
       accessoryTemplateName,
       textureSrc,
@@ -222,7 +242,8 @@ export default defineComponent({
       onTexture,
       clickDownloadTexture,
       clickUploadTexture,
-      clickUploadAccessory
+      clickUploadAccessory,
+      clickDownloadGlb
     };
   }
 });
