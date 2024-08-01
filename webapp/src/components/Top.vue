@@ -14,9 +14,7 @@
           <div class="select">
             <select v-model="accessoryTemplateName">
               <option value="">作りたいアクセサリを選択してください</option>
-              <option value="tasuki">シンプルなたすき [かわしぃ]</option>
-              <option value="umbrella">開いた傘</option>
-              <option value="kimoneze">キモネーゼ</option>
+              <option v-for="item,i in accessoryTemplateList" v-bind:key="i" :value="item.name">{{ item.label }}</option>
             </select>
             <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
 <!--
@@ -133,6 +131,14 @@ export default defineComponent({
     ModelView,
   },
   setup(props, { emit }) {
+
+    const accessoryTemplateList = [
+      { name: "tasuki", label: "シンプルなたすき [かわしぃ]" },
+      { name: "suzuri-badge", label: "缶バッチ" },
+      { name: "umbrella", label: "開いた傘" },
+      { name: "kimoneze", label: "キモネーゼ" },
+    ];
+
     const textureSrc = ref("");
     textureSrc.value = require('@/assets/512x512.png');
 
@@ -232,6 +238,7 @@ export default defineComponent({
     };
 
     return {
+      accessoryTemplateList,
       accessoryTemplateName,
       textureSrc,
       thumbnailSrc,
