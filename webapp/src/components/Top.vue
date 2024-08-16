@@ -17,14 +17,14 @@
               <option v-for="item,i in accessoryTemplateList" v-bind:key="i" :value="item.name">{{ item.label }}</option>
             </select>
             <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
-<!--
-            <button class="button is-success" @click="clickDownloadGlb">
+
+            <button v-if="isGlbDownload" class="button is-success" @click="clickDownloadGlb">
               <span class="icon is-small">
                 <i class="fas fa-camera"></i>
               </span>
               <span>ダウンロード</span>
             </button>
--->
+
           </div>
         </div>
       </div>
@@ -131,8 +131,10 @@ export default defineComponent({
     ModelView,
   },
   setup(props, { emit }) {
+    const isGlbDownload = ref(false);
 
     const accessoryTemplateList = [
+      { name: "roundpaperfan", label: "うちわ" },
       { name: "tasuki", label: "シンプルなたすき [かわしぃ]" },
       { name: "suzuri-badge", label: "缶バッチ" },
       { name: "umbrella", label: "開いた傘" },
@@ -237,7 +239,11 @@ export default defineComponent({
       a.click();
     };
 
+    // localhost の場合 isGlbDownload を true にする
+    isGlbDownload.value = (location.hostname === "localhost");
+
     return {
+      isGlbDownload,
       accessoryTemplateList,
       accessoryTemplateName,
       textureSrc,
