@@ -16,8 +16,8 @@ export default defineComponent({
     name: 'ModelView',
     props: {
         accessoryTemplateName: String,
-        width: Number,
-        height: Number,
+        // width: Number,
+        // height: Number,
     },
     emits: [
         'onTexture',
@@ -63,7 +63,20 @@ export default defineComponent({
             camera.position.set(0, 0, 1.0);
 
             renderer = new THREE.WebGLRenderer({ canvas: viewerElement, preserveDrawingBuffer: true });
-            renderer.setSize(props.width!, props.height!);
+            
+            const width = viewerElement.clientWidth;
+            const height = viewerElement.clientHeight;
+            renderer.setSize(width, height);
+            
+            // リサイズ監視
+            const resizeObserver = new ResizeObserver(() => {
+                const w = viewerElement.clientWidth;
+                const h = viewerElement.clientHeight;
+                renderer.setSize(w, h);
+                // 正方形前提の平行投影なのでアスペクト比調整は最低限で良いが、
+                // もしアスペクト比が変わるならここで camera の left/right/top/bottom を更新する
+            });
+            resizeObserver.observe(viewerElement);
             renderer.setClearColor(0x7fbfff, 1.0);
 
             // 環境光
