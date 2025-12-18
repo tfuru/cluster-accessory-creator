@@ -17,7 +17,7 @@
               <option v-for="item,i in accessoryTemplateList" v-bind:key="i" :value="item.name">{{ item.label }}</option>
             </select>
           </div>
-            <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" />
+            <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="400" :height="400" />
 <!--
             <button v-if="isGlbDownload" class="button is-success" @click="clickDownloadGlb">
               <span class="icon is-small">
@@ -279,15 +279,15 @@ export default defineComponent({
 }
 
 .modelview {
-  width: 512px;
-  height: 512px;
+  width: 400px;
+  height: 400px;
   background-color: lightblue;
 }
 
 .texture > .image, .thumbnail > .image {
   margin: 0;
-  width: 512px;
-  height: 512px;
+  width: 400px;
+  height: 400px;
 }
 
 @media screen and (max-width: 768px) {
