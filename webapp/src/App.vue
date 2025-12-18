@@ -2,7 +2,7 @@
   <div class="content">
 
     <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
+      <div class="column is-12-mobile is-half-desktop is-offset-one-quarter-desktop">
         <nav>
           <router-link to="/">ホーム</router-link>
           | <router-link to="/about">使い方</router-link>
