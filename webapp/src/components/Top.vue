@@ -16,16 +16,16 @@
               <option value="">作りたいアクセサリを選択してください</option>
               <option v-for="item,i in accessoryTemplateList" v-bind:key="i" :value="item.name">{{ item.label }}</option>
             </select>
-            <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" :width="512" :height="512" />
-
+          </div>
+            <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" />
+<!--
             <button v-if="isGlbDownload" class="button is-success" @click="clickDownloadGlb">
               <span class="icon is-small">
                 <i class="fas fa-camera"></i>
               </span>
               <span>ダウンロード</span>
             </button>
-
-          </div>
+-->
         </div>
       </div>
 
@@ -286,11 +286,17 @@ export default defineComponent({
 
 .texture > .image, .thumbnail > .image {
   margin: 0;
-  width: 256px;
-  height: 256px;
+  width: 512px;
+  height: 512px;
 }
 
 @media screen and (max-width: 768px) {
+  .modelview {
+    width: 100%;
+    height: auto;
+    min-height: 390px;
+  }
+
   .container > .column {
     border: none;
   }
@@ -301,14 +307,14 @@ export default defineComponent({
   }
   
   .column > .model {
-    width: 560px;
-    height: 560px;
+    width: 100%;
+    height: auto;
   }
 
   .texture > .image, .thumbnail > .image {
     margin: 0;
-    width: 256px;
-    height: 256px;
+    width: 100%;
+    height: auto;
   }
   
 }
