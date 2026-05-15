@@ -159,27 +159,20 @@
     <!-- アクションバー (下部固定) -->
     <div class="editor-action-bar p-3 has-background-white border-top shadow-up">
       <div class="container is-fluid">
-        <div class="level is-mobile">
-          <div class="level-left">
-            <button class="button is-light is-rounded is-small px-4" @click="$emit('close')">
-              キャンセル
-            </button>
-          </div>
-          <div class="level-right">
-            <div class="field is-grouped">
-              <p class="control">
-                <button class="button is-success is-rounded is-small px-5" v-if="user" @click="clickSaveAccessory">
-                  <span class="icon"><i class="fa fa-save"></i></span>
-                  <span>保存</span>
-                </button>
-              </p>
-              <p class="control">
-                <button class="button is-info is-rounded is-small px-5" @click="clickUploadAccessory">
-                  <span class="icon"><i class="fa fa-cloud-upload"></i></span>
-                  <span>cluster連携</span>
-                </button>
-              </p>
-            </div>
+        <div class="is-flex is-justify-content-flex-end">
+          <div class="field is-grouped">
+            <p class="control">
+              <button class="button is-success is-rounded is-small px-5" v-if="user" @click="clickSaveAccessory">
+                <span class="icon"><i class="fa fa-save"></i></span>
+                <span>保存</span>
+              </button>
+            </p>
+            <p class="control">
+              <button class="button is-info is-rounded is-small px-5" @click="clickUploadAccessory">
+                <span class="icon"><i class="fa fa-cloud-upload"></i></span>
+                <span>cluster連携</span>
+              </button>
+            </p>
           </div>
         </div>
       </div>
