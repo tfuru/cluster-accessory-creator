@@ -1,6 +1,6 @@
 <template>
   <div id="modelview-root" ref="container" style="width: 100%; height: 100%; overflow: hidden;">
-    <canvas ref="canvas" style="display: block;"></canvas>
+    <canvas ref="canvas" style="display: block; width: 100%; height: 100%;"></canvas>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default defineComponent({
     };
 
     let currentSize = 0.3;
-    let boundingBox = new THREE.Box3();
+    const boundingBox = new THREE.Box3();
 
     const fitCameraToObject = (object: THREE.Object3D) => {
       boundingBox.setFromObject(object);
@@ -52,7 +52,7 @@ export default defineComponent({
 
       // 最大の寸法に基づいてカメラのサイズを決定
       const maxDim = Math.max(size.x, size.y, size.z);
-      currentSize = maxDim * 0.7; // 少し余白を持たせる
+      currentSize = maxDim * 0.55; // 余白を詰めてより大きく表示
 
       if (camera && container.value) {
         const rect = container.value.getBoundingClientRect();
@@ -62,6 +62,9 @@ export default defineComponent({
         camera.top = currentSize;
         camera.bottom = -currentSize;
         camera.updateProjectionMatrix();
+        
+        // 描画領域のサイズも同期させる
+        renderer?.setSize(rect.width, rect.height);
         
         // カメラを正面に配置
         camera.position.set(0, 0, 1.0);
@@ -185,7 +188,6 @@ export default defineComponent({
 
     const takeThumbnail = (callback: (dataUrl: string) => void) => {
       if (!canvas.value) return;
-      // 撮影用に背景を一時的に透明にしたり調整することも可能だが、現状はそのまま
       callback(canvas.value.toDataURL("image/png"));
     };
 
@@ -219,4 +221,3 @@ export default defineComponent({
   background-color: #7fbfff;
 }
 </style>
-  

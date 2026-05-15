@@ -3,7 +3,7 @@
     <div class="container">
       <div class="level">
         <div class="level-left">
-          <h1 class="title">ダッシュボード</h1>
+          <h1 class="title">アクセサリー</h1>
         </div>
         <div class="level-right">
           <button class="button is-primary" @click="openEditor()">
@@ -76,7 +76,7 @@
     <!-- Editor Modal Overlay -->
     <div class="modal" :class="{'is-active': showEditorModal}">
       <div class="modal-background" @click="closeEditor"></div>
-      <div class="modal-card" style="width: 95%; max-width: 1400px; height: 95vh; max-height: 95vh;">
+      <div class="modal-card" style="width: 95%; max-width: 1200px; height: auto; max-height: 95vh;">
         <header class="modal-card-head">
           <p class="modal-card-title">{{ editingId ? 'アクセサリー編集' : 'アクセサリー新規作成' }}</p>
           <button class="delete" aria-label="close" @click="closeEditor"></button>

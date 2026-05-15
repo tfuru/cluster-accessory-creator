@@ -2,132 +2,117 @@
   <div class="top-editor">
     <div class="columns is-variable is-3 mb-0 editor-main">
       <!-- 左側: 3Dプレビュー (固定) -->
-      <div class="column is-5-widescreen is-6-desktop is-12-tablet preview-column p-4 has-background-light">
-        <div class="sticky-preview">
-          <div class="card editor-card is-flex is-flex-direction-column h-100">
-            <!-- 構成ヘッダー -->
-            <div class="card-content p-4 border-bottom has-background-white-bis">
-              <div class="field mb-3">
-                <label class="label is-size-7 mb-1">アクセサリー名</label>
+      <div class="column is-6-widescreen is-7-desktop is-12-tablet preview-column p-4 has-background-light">
+        <div class="card editor-card is-flex is-flex-direction-column h-100">
+          <!-- 構成ヘッダー -->
+          <div class="card-header-custom p-4 border-bottom">
+            <div class="field mb-4">
+              <label class="label is-small has-text-grey">アクセサリー名</label>
+              <div class="control has-icons-left">
+                <input class="input is-rounded is-small" type="text" placeholder="アクセサリー名を入力" v-model="accessoryName" />
+                <span class="icon is-small is-left"><i class="fa fa-tag"></i></span>
+              </div>
+            </div>
+            <div class="columns is-mobile is-variable is-1">
+              <div class="column">
+                <label class="label is-small has-text-grey">テンプレート</label>
                 <div class="control has-icons-left">
-                  <input class="input is-small is-rounded" type="text" v-model="accessoryName" placeholder="名前を入力">
-                  <span class="icon is-small is-left"><i class="fa fa-tag"></i></span>
+                  <div class="select is-fullwidth is-rounded is-small">
+                    <select v-model="accessoryTemplateName">
+                      <option value="">選択してください</option>
+                      <option v-for="item in accessoryTemplateList" :key="item.name" :value="item.name">{{ item.label }}</option>
+                    </select>
+                  </div>
+                  <span class="icon is-small is-left"><i class="fa fa-cube"></i></span>
                 </div>
               </div>
-
-              <div class="field mb-0">
-                <label class="label is-size-7 mb-1">テンプレート / GLBファイル</label>
-                <div class="columns is-mobile is-variable is-1">
-                  <div class="column">
-                    <div class="select is-fullwidth is-small is-rounded">
-                      <select v-model="accessoryTemplateName">
-                        <option value="">選択してください</option>
-                        <option v-for="item,i in accessoryTemplateList" v-bind:key="i" :value="item.name">{{ item.label }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="column">
-                    <div class="file is-info is-small is-fullwidth">
-                      <label class="file-label" style="width: 100%;">
-                        <input class="file-input" type="file" accept=".glb" @change="clickUploadGlbFile"/>
-                        <span class="file-cta is-rounded" style="width: 100%; justify-content: center; background-color: #3e8ed0; height: 32px;">
-                          <span class="file-icon"><i class="fa fa-upload"></i></span>
-                          <span class="file-label">GLB読込</span>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
+              <div class="column is-narrow is-flex is-align-items-flex-end">
+                <div class="file is-info is-light is-rounded">
+                  <label class="file-label">
+                    <input class="file-input" type="file" @change="clickUploadGlbFile" />
+                    <span class="file-cta px-4">
+                      <span class="file-icon"><i class="fa fa-upload"></i></span>
+                      <span class="file-label">GLB読込</span>
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- プレビュー本体 -->
-            <div class="card-content p-0 is-flex-grow-1 has-background-black" style="position: relative; min-height: 300px;">
-              <ModelView ref="modelView" class="modelview" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" />
-            </div>
-
-            <!-- フッターアクション -->
-            <footer class="card-footer p-2 has-background-white-bis" style="justify-content: center; border-top: 1px solid var(--border-color);">
-              <button v-if="isGlbDownload" class="button is-success is-small is-rounded px-4" style="height: 32px;" @click="clickDownloadGlb">
-                <span class="icon is-small"><i class="fa fa-download"></i></span>
+          <!-- 3D表示エリア -->
+          <div class="card-content p-0 is-flex-grow-1 is-relative is-flex is-justify-content-center is-align-items-center" style="background-color: #f8fafc; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; overflow: hidden;">
+            <ModelView ref="modelView" class="modelview-full" @onTexture="onTexture" :accessoryTemplateName="accessoryTemplateName" />
+            <div class="preview-overlay p-3">
+              <button v-if="isGlbDownload" class="button is-dark is-rounded opacity-80" @click="clickDownloadGlb">
+                <span class="icon"><i class="fa fa-download"></i></span>
                 <span>GLB保存</span>
               </button>
-              <div v-else class="is-size-7 has-text-grey-light py-1">プレビュー</div>
-            </footer>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 右側: 設定項目 -->
+      <!-- 右側: カスタマイズ設定 (スクロール可) -->
       <div class="column settings-column p-4 has-background-light">
-        <div class="customization-stack">
-          <div class="columns is-multiline is-variable is-1 is-flex-tablet">
-            <!-- テクスチャ設定 -->
-            <div class="column is-6 is-flex">
-              <div class="card editor-card is-flex-grow-1 is-flex is-flex-direction-column">
-                <header class="card-header has-background-white-ter">
-                  <p class="card-header-title is-size-7 py-2">
-                    <span class="icon mr-1 has-text-info"><i class="fa fa-paint-brush"></i></span>
-                    テクスチャ
-                  </p>
-                </header>
-                <div class="card-content p-3 is-flex-grow-1 is-flex is-flex-direction-column">
-                  <div class="texture-preview-box mb-3 is-flex-grow-1 is-flex is-align-items-center is-justify-content-center">
-                    <figure class="image is-4by3" style="width: 100%;">
-                      <img :src="textureSrc" alt="texture" class="texture-preview-img">
-                    </figure>
-                  </div>
-                  <div class="columns is-mobile is-variable is-1 mb-0 mt-auto">
-                    <div class="column is-6">
-                      <div class="file is-info is-small is-fullwidth">
-                        <label class="file-label">
-                          <input class="file-input" type="file" @change="clickUploadTexture"/>
-                          <span class="file-cta is-rounded" style="width: 100%; justify-content: center; height: 32px;">
-                            <span class="file-icon"><i class="fa fa-upload"></i></span>
-                            <span class="file-label">読込</span>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <button class="button is-success is-light is-fullwidth is-rounded is-small" style="height: 32px;" @click="clickDownloadTexture">
-                        <span class="icon is-small"><i class="fa fa-download"></i></span>
-                        <span>保存</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+        <div class="columns is-multiline" style="height: 100%;">
+          <!-- テクスチャ設定 -->
+          <div class="column is-6-desktop is-12-tablet is-flex">
+            <div class="card editor-card is-flex-grow-1">
+              <div class="card-header-custom p-3 border-bottom is-flex is-align-items-center">
+                <span class="icon has-text-info mr-2"><i class="fa fa-pencil"></i></span>
+                <h2 class="subtitle is-6 mb-0 font-weight-bold">テクスチャ</h2>
               </div>
-            </div>
-
-            <!-- サムネイル設定 -->
-            <div class="column is-6 is-flex">
-              <div class="card editor-card is-flex-grow-1 is-flex is-flex-direction-column">
-                <header class="card-header has-background-white-ter">
-                  <p class="card-header-title is-size-7 py-2">
-                    <span class="icon mr-1 has-text-info"><i class="fa fa-camera"></i></span>
-                    サムネイル
-                  </p>
-                </header>
-                <div class="card-content p-3 is-flex-grow-1 is-flex is-flex-direction-column">
-                  <div class="thumbnail-preview-box mb-3 is-flex-grow-1 is-flex is-align-items-center is-justify-content-center">
-                    <figure class="image is-4by3" style="width: 100%;">
-                      <img :src="thumbnailSrc" alt="thumbnail" class="thumbnail-preview-img">
-                    </figure>
+              <div class="card-content p-4 is-flex is-flex-direction-column is-flex-grow-1">
+                <div class="texture-preview-container mb-4">
+                  <figure class="image preview-box">
+                    <img :src="textureSrc" alt="texture" class="preview-img">
+                  </figure>
+                </div>
+                <div class="is-flex is-justify-content-center is-align-items-center mt-auto" style="gap: 10px;">
+                  <div class="file is-info is-light is-rounded mb-0">
+                    <label class="file-label">
+                      <input class="file-input" type="file" @change="clickUploadTexture" />
+                      <span class="file-cta px-4">
+                        <span class="file-icon"><i class="fa fa-upload"></i></span>
+                        <span class="file-label">読込</span>
+                      </span>
+                    </label>
                   </div>
-                  <div class="mt-auto">
-                    <button class="button is-info is-fullwidth is-rounded is-small" style="height: 32px;" @click="clickTakeThumbnail">
-                      <span class="icon is-small"><i class="fa fa-camera"></i></span>
-                      <span>プレビューを撮影</span>
-                    </button>
-                  </div>
+                  <button class="button is-light is-rounded px-4 mb-0" @click="clickDownloadTexture">
+                    <span class="icon"><i class="fa fa-save"></i></span>
+                    <span>保存</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- サムネイル設定 -->
+          <div class="column is-6-desktop is-12-tablet is-flex">
+            <div class="card editor-card is-flex-grow-1">
+              <div class="card-header-custom p-3 border-bottom is-flex is-align-items-center">
+                <span class="icon has-text-info mr-2"><i class="fa fa-camera"></i></span>
+                <h2 class="subtitle is-6 mb-0 font-weight-bold">サムネイル</h2>
+              </div>
+              <div class="card-content p-4 is-flex is-flex-direction-column is-flex-grow-1">
+                <div class="texture-preview-container mb-4">
+                  <figure class="image preview-box">
+                    <img :src="thumbnailSrc" alt="thumbnail" class="preview-img">
+                  </figure>
+                </div>
+                <div class="buttons is-centered mt-auto">
+                  <button class="button is-info is-light is-rounded is-fullwidth mx-4" @click="clickTakeThumbnail">
+                    <span class="icon"><i class="fa fa-camera"></i></span>
+                    <span>プレビューを撮影</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
     <!-- 連携完了モーダル -->
     <div class="modal" :class="{'is-active': showUploadSuccessModal}">
@@ -162,13 +147,13 @@
         <div class="is-flex is-justify-content-flex-end">
           <div class="field is-grouped">
             <p class="control">
-              <button class="button is-success is-rounded is-small px-5" v-if="user" @click="clickSaveAccessory">
+              <button class="button is-success is-rounded px-5" v-if="user" @click="clickSaveAccessory">
                 <span class="icon"><i class="fa fa-save"></i></span>
                 <span>保存</span>
               </button>
             </p>
             <p class="control">
-              <button class="button is-info is-rounded is-small px-5" @click="clickUploadAccessory">
+              <button class="button is-info is-rounded px-5" @click="clickUploadAccessory">
                 <span class="icon"><i class="fa fa-cloud-upload"></i></span>
                 <span>cluster連携</span>
               </button>
@@ -178,12 +163,9 @@
       </div>
     </div>
 
-    <!-- トースト通知 -->
-    <transition name="toast">
+    <!-- 通知トースト -->
+    <transition name="fade">
       <div v-if="notification.visible" class="notification-toast" :class="'is-' + notification.type">
-        <span class="icon mr-2">
-          <i class="fa" :class="notification.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
-        </span>
         {{ notification.message }}
       </div>
     </transition>
@@ -191,7 +173,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from 'vue';
+import { defineComponent, ref, reactive, onMounted, watch } from 'vue';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { useRoute } from 'vue-router';
 
 import localStorage from 'localStorage';
 import { auth, googleProvider, db } from '../firebase';
@@ -203,8 +189,10 @@ import ModelView from './modules/ModelView.vue';
 import CreatorKitItemApi from './modules/CreatorKitItemApi';
 import AccessoryService from './modules/AccessoryService';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const defaultImage = require('@/assets/512x512.png');
+
 interface TypeModelView {
-  // Define the properties and methods of a ModelView instance here
   loadShowGlb: (source: string | File) => void;
   takeThumbnail: (callback: (dataUrl: string) => void) => void;
   replaceTexture: (raw: ArrayBuffer, callback: ()=>void) => void;
@@ -228,7 +216,6 @@ export default defineComponent({
     const user = ref<User | null>(null);
     const showUploadSuccessModal = ref(false);
 
-    // 通知用ステート
     const notification = reactive({
       message: "",
       type: "info",
@@ -252,8 +239,6 @@ export default defineComponent({
       { name: "kimoneze", label: "キモネーゼ" },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const defaultImage = require('@/assets/512x512.png');
     const textureSrc = ref(defaultImage);
     const thumbnailSrc = ref(defaultImage);
 
@@ -261,7 +246,6 @@ export default defineComponent({
     const modelView = ref<TypeModelView | null>(null);
 
     watch(accessoryTemplateName, () => {
-      // テンプレート変更時に画像を初期化
       textureSrc.value = defaultImage;
       thumbnailSrc.value = defaultImage;
     });
@@ -276,14 +260,12 @@ export default defineComponent({
     onAuthStateChanged(auth, async (u) => {
       user.value = u;
       if (u) {
-        // Firestoreからトークンを読み込む
         const docRef = doc(db, "users", u.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           accessToken.value = docSnap.data().accessToken || "";
         }
 
-        // ID指定がある場合はデータを読み込む
         if (currentAccessoryId.value) {
           const metadata = await AccessoryService.getAccessory(u.uid, currentAccessoryId.value);
           if (metadata) {
@@ -300,22 +282,17 @@ export default defineComponent({
     });
 
     const onTexture = (dataUrl: string) => {
-      console.log("onTexture", dataUrl);
       textureSrc.value = dataUrl;
     };
 
-    // 撮影したサムネイル画像を受け取り表示する
-    const clickTakeThumbnail = (event: any) => {
+    const clickTakeThumbnail = () => {
       if (modelView.value == null) return;
       modelView.value.takeThumbnail((dataUrl: string) => {
-        // console.log(`dataUrl ${dataUrl}`);
         thumbnailSrc.value = dataUrl;
       });
     };
 
-    const clickDownloadTexture = (event: any) => {
-      console.log("clickDownloadTexture");
-      // textureSrc をダウンロードする
+    const clickDownloadTexture = () => {
       const a = document.createElement("a");
       a.href = textureSrc.value;
       a.download = "texture.png";
@@ -323,107 +300,81 @@ export default defineComponent({
     };
 
     const clickUploadTexture = (event: any) => {
-      console.log("clickUploadTexture");
-      // アップロードされたファイルを取得
       const file = event.target.files[0];
-
       const fileReader = new FileReader();
       fileReader.onload = (event: any) => {
         if (modelView.value == null) return;
         modelView.value.replaceTexture(event.target.result, () => {
-          console.log("replaceTexture success");
+          showNotification("テクスチャを更新しました");
         });
       };
       fileReader.readAsArrayBuffer(file);
     };
 
     const clickUploadGlbFile = (event: any) => {
-      console.log("clickUploadGlbFile");
       const file = event.target.files[0];
-      if (modelView.value == null || !file) return;
-      modelView.value.loadShowGlb(file);
+      if (modelView.value) {
+        modelView.value.loadShowGlb(file);
+        showNotification("GLBファイルを読み込みました");
+      }
     };
 
     const convertDataUrl = async (dataUrl: string) => { 
       return await (await fetch(dataUrl)).blob()
     }
 
-    const clickUploadAccessory = async (event: any) => {
-      console.log("clickUploadAccessory");
-      // アクセサリをアップロードする
+    const clickUploadAccessory = async () => {
       if (modelView.value == null) return;
-      if (accessToken.value == "") return;
-      
-      if (user.value) {
-        await setDoc(doc(db, "users", user.value.uid), {
-          accessToken: accessToken.value,
-          updatedAt: new Date()
-        }, { merge: true });
-      } else {
-        localStorage.setItem('accessToken', accessToken.value);
+      if (accessToken.value == "") {
+        showNotification("トークンを設定してください", "danger");
+        return;
       }
-      localStorage.setItem('accessoryName', accessoryName.value);
-      
-      const thumbnailBlob = await convertDataUrl(thumbnailSrc.value);
-
-      const glb = await modelView.value.glb();
-      const icon = new File([thumbnailBlob], "icon.png", { type: "image/png" });
-
-      await CreatorKitItemApi.uploadAccessory(accessToken.value, accessoryName.value,  glb, icon, (status) =>{
-        console.log("uploadAccessory", status);
-        // TODO アップロード状況 を 画面更新
-        switch(status) {
-          case "COMPLETED":
-            showNotification("アップロードが完了しました", "success");
-            showUploadSuccessModal.value = true;
-            break;
-          case "TIMEOUT":
-          case "ERROR":
-            showNotification(`アップロードに失敗しました ステータス: ${status}`, "danger");
-            break;
-          default:
-            break;
-        }
-      });
-    };
-
-    const clickSaveAccessory = async () => {
-      if (!user.value || !modelView.value) return;
       
       try {
         const thumbnailBlob = await convertDataUrl(thumbnailSrc.value);
         const glb = await modelView.value.glb();
-        
-        const id = await AccessoryService.saveAccessory(
-          user.value.uid, 
-          accessoryName.value, 
-          glb, 
-          thumbnailBlob, 
-          currentAccessoryId.value
-        );
+        const icon = new File([thumbnailBlob], "icon.png", { type: "image/png" });
+
+        showNotification("アップロード中...", "info");
+        await CreatorKitItemApi.uploadAccessory(accessToken.value, accessoryName.value,  glb, icon, (status) =>{
+          if(status === "COMPLETED") {
+            showUploadSuccessModal.value = true;
+            notification.visible = false;
+          } else if(status === "ERROR" || status === "TIMEOUT") {
+            showNotification(`アップロード失敗: ${status}`, "danger");
+          }
+        });
+      } catch (e) {
+        showNotification("アップロード中にエラーが発生しました", "danger");
+      }
+    };
+
+    const clickSaveAccessory = async () => {
+      if (!user.value || !modelView.value) return;
+      try {
+        const thumbnailBlob = await convertDataUrl(thumbnailSrc.value);
+        const glb = await modelView.value.glb();
+        const id = await AccessoryService.saveAccessory(user.value.uid, accessoryName.value, glb, thumbnailBlob, currentAccessoryId.value);
         currentAccessoryId.value = id;
-        showNotification("ダッシュボードに保存しました", "success");
+        showNotification("保存しました", "success");
         emit('saved', id);
       } catch (error) {
-        console.error("Save failed", error);
         showNotification("保存に失敗しました", "danger");
       }
     };
 
-    const clickDownloadGlb = async (event: any) => {
-      console.log("clickDownloadGlb");
-      // glb をダウンロードする
+    const clickDownloadGlb = async () => {
       if (modelView.value == null) return;
       const glb = await modelView.value.glb();
-
       const a = document.createElement("a");
       a.href = URL.createObjectURL(glb);
-      a.download = "accessory_template.glb";
+      a.download = `${accessoryName.value || 'accessory'}.glb`;
       a.click();
     };
 
-    // localhost の場合 isGlbDownload を true にする
-    isGlbDownload.value = (location.hostname === "localhost");
+    onMounted(() => {
+      isGlbDownload.value = (location.hostname === "localhost");
+    });
 
     return {
       isGlbDownload,
@@ -450,267 +401,159 @@ export default defineComponent({
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* テーマカラーの定義 */
 .top-editor {
-  --bg-color: #ffffff;
-  --bg-sidebar: #f0f4f7;
-  --bg-card: #ffffff;
-  --text-main: #363636;
-  --text-grey: #7a7a7a;
-  --border-color: #e1e8ed;
-  --primary-blue: #3273dc;
-  --primary-blue-hover: #276cda;
-  --accent-light: #eef3fc;
-  --shadow-color: rgba(0, 0, 0, 0.05);
-  
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  overflow-x: hidden;
-}
-
-/* ダークモードの設定 */
-@media (prefers-color-scheme: dark) {
-  .top-editor {
-    --bg-color: #0f172a;
-    --bg-sidebar: #1e293b;
-    --bg-card: #1e293b;
-    --text-main: #f1f5f9;
-    --text-grey: #94a3b8;
-    --border-color: #334155;
-    --primary-blue: #3b82f6;
-    --primary-blue-hover: #60a5fa;
-    --accent-light: #1e293b;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* トースト通知のスタイル */
-.notification-toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  padding: 12px 24px;
-  border-radius: 50px;
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-}
-
-.notification-toast.is-success {
-  background-color: #48c78e;
-}
-
-.notification-toast.is-danger {
-  background-color: #f14668;
-}
-
-.notification-toast.is-info {
-  background-color: var(--primary-blue);
-}
-
-/* アニメーション */
-.toast-enter-active, .toast-leave-active {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.toast-enter-from {
-  opacity: 0;
-  transform: translate(-50%, -100%);
-}
-
-.toast-leave-to {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.8);
+  overflow: hidden;
+  background-color: #f5f7fa;
 }
 
 .editor-main {
   flex: 1;
   overflow: hidden;
-  display: flex;
+  margin: 0 !important;
 }
 
-.preview-column {
-  background-color: var(--bg-sidebar);
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-}
-
-.sticky-preview {
-  position: sticky;
-  top: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.preview-header {
-  z-index: 5;
-}
-
-.preview-header .title {
-  color: var(--text-main) !important;
-}
-
-.preview-header .label {
-  color: var(--text-main) !important;
-}
-
-.modelview-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-sidebar);
-}
-
-.modelview-card {
-  flex: 1;
-  position: relative;
-  background-color: #000;
-  border: 1px solid var(--border-color);
-  border-radius: 16px; /* 角丸を少し強調 */
-  overflow: hidden;
-}
-
-.shadow-premium {
-  box-shadow: 0 10px 30px var(--shadow-color);
-}
-
-@media (prefers-color-scheme: dark) {
-  .modelview-card {
-    border-color: #475569; /* ダークモードでの境界線をより明瞭に */
-  }
-}
-
-.modelview {
-  width: 100% !important;
-  height: 100% !important;
+.preview-column, .settings-column {
+  height: calc(100vh - 200px);
+  min-height: 600px;
 }
 
 .settings-column {
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
 }
 
-.settings-column .title {
-  color: var(--text-main) !important;
+.settings-column > .columns {
+  flex: 1; /* 親要素の高さをいっぱいに使う */
+}
+
+.settings-column .column {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem; /* 標準のパディング */
 }
 
 .editor-card {
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-card);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px var(--shadow-color);
+  flex: 1;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
 }
 
-.editor-card .card-header-title {
-  color: var(--text-main) !important;
+.card-header-custom {
+  background-color: #fff;
 }
 
-.editor-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--shadow-color);
+.border-bottom {
+  border-bottom: 1px solid #eee;
 }
 
-.texture-preview-box, .thumbnail-preview-box {
-  background: var(--bg-sidebar);
-  border: 1px dashed var(--border-color);
+.modelview-full {
+  display: block;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 500px;
+  max-height: 500px;
+  margin-bottom: 2rem;
+  background-color: #7fbfff;
+}
+
+.preview-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.texture-preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafc; /* 少し明るめの背景に */
+  border-radius: 12px;
+  padding: 15px;
+  border: 2px dashed #e2e8f0;
+  min-height: 0; /* flexアイテム内での縮小を許可 */
+}
+
+.preview-box {
+  background: white;
   border-radius: 8px;
-  padding: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+  max-height: 250px;
+  margin: 0 auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.texture-preview-img, .thumbnail-preview-img {
+.preview-img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  border-radius: 4px;
 }
 
 .editor-action-bar {
   z-index: 100;
-  background-color: var(--bg-card) !important;
+  border-top: 1px solid #eee;
 }
 
 .shadow-up {
-  box-shadow: 0 -4px 15px var(--shadow-color);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
 }
 
-.border-bottom {
-  border-bottom: 1px solid var(--border-color);
+.notification-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  color: white;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-weight: 600;
 }
 
-.border-top {
-  border-top: 1px solid var(--border-color);
+.notification-toast.is-success { background: #48c78e; }
+.notification-toast.is-info { background: #3e8ed0; }
+.notification-toast.is-danger { background: #f14668; }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
-.h-100 {
-  height: 100%;
+.opacity-80 {
+  opacity: 0.8;
 }
 
-/* Bulmaのオーバーライド */
-.input, .select select {
-  background-color: var(--bg-card) !important;
-  color: var(--text-main) !important;
-  border-color: var(--border-color) !important;
+.font-weight-bold {
+  font-weight: 700;
 }
 
-.input::placeholder {
-  color: var(--text-grey) !important;
-}
-
-.button.is-light {
-  background-color: var(--bg-sidebar) !important;
-  color: var(--text-main) !important;
-  border-color: var(--border-color) !important;
-}
-
-.message.is-info {
-  background-color: var(--accent-light) !important;
-}
-
-.message.is-info .message-body {
-  color: var(--text-main) !important;
-  border-color: var(--primary-blue) !important;
-}
-
-.has-background-white-bis {
-  background-color: var(--bg-sidebar) !important;
-}
-
-.has-background-white-ter {
-  background-color: var(--bg-sidebar) !important;
-}
-
-.has-background-light {
-  background-color: var(--bg-color) !important;
-}
-
-@media screen and (max-width: 768px) {
-  .editor-main {
-    flex-direction: column;
-    overflow-y: auto;
-  }
-  
-  .preview-column {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    min-height: 400px;
+@media screen and (max-width: 1023px) {
+  .preview-column, .settings-column {
     height: auto;
+    overflow: visible;
   }
-  
-  .sticky-preview {
-    position: relative;
+  .top-editor {
+    overflow-y: auto;
   }
 }
 </style>

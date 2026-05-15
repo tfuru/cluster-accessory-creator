@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    meta: { title: 'ダッシュボード', requiresAuth: true },
+    meta: { title: 'アクセサリー', requiresAuth: true },
     component: () => import('../views/DashboardView.vue')
   },
   {

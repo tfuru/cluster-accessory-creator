@@ -1,38 +1,23 @@
 <template>
   <div id="app">
-    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-white border-bottom mb-5" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
-          <router-link class="navbar-item" to="/">
-            <strong class="is-size-5">Cluster Accessory Creator</strong>
+          <router-link class="navbar-item has-text-weight-bold is-size-5" to="/">
+            Accessory Creator
           </router-link>
         </div>
 
         <div class="navbar-menu is-active">
-          <div class="navbar-start" v-if="user">
-            <router-link class="navbar-item" to="/dashboard">ダッシュボード</router-link>
-            <router-link class="navbar-item" to="/settings">設定</router-link>
-          </div>
-
           <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <router-link class="button is-ghost" to="/about">使い方</router-link>
-                </p>
-                <p class="control">
-                  <a class="button is-ghost" href="https://forms.gle/pz1HamLdBKB5RrHq7">アイテム応募</a>
-                </p>
-                <p class="control" v-if="user">
-                  <button class="button is-light" @click="logout">ログアウト</button>
-                </p>
-              </div>
-            </div>
+            <router-link class="navbar-item" to="/">ホーム</router-link>
+            <router-link class="navbar-item" to="/about">使い方</router-link>
+            <a class="navbar-item" href="https://forms.gle/pz1HamLdBKB5RrHq7" target="_blank">アイテム応募</a>
           </div>
         </div>
       </div>
     </nav>
-
+    
     <router-view/>
   </div>
 </template>
@@ -73,16 +58,16 @@ export default defineComponent({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  /* color: #2c3e50; */
+  color: #2c3e50;
+  min-height: 100vh;
+  background-color: #fafafa;
 }
 
-nav {
-  padding: 20px;
-  /* background-color: #f0f0f0; */
-  a {
-    font-size: large;
-  }
+.border-bottom {
+  border-bottom: 1px solid #eee !important;
 }
 
+.navbar-item {
+  font-weight: 500;
+}
 </style>
