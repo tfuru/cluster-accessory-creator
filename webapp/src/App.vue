@@ -11,6 +11,7 @@
         <div class="navbar-menu is-active">
           <div class="navbar-end">
             <router-link class="navbar-item" to="/">ホーム</router-link>
+            <router-link class="navbar-item" to="/settings">設定</router-link>
             <router-link class="navbar-item" to="/about">使い方</router-link>
             <a class="navbar-item" href="https://forms.gle/pz1HamLdBKB5RrHq7" target="_blank">アイテム応募</a>
           </div>

@@ -27,6 +27,31 @@ firebase emulators:start
 open http://localhost:5000/login
 ```
 
+### Storage CORS設定
+Storage の CORS 設定は、`cors.json` ファイルを更新し、`gsutil cors set` コマンドで適用します。
+```
+gsutil ls
+
+gsutil cors set storage-cors.json gs://cluster-accessory-creator.firebasestorage.app
+gsutil cors get gs://cluster-accessory-creator.firebasestorage.app
+```
+
+```json:storage_cors.json
+[
+  {
+    "origin": ["*"],
+    "method": [
+      "GET",
+      "PUT",
+      "POST",
+      "DELETE",
+      "HEAD"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]
+```
+
 # デプロイ
 
 ```bash
