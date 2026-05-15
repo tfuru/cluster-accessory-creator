@@ -18,10 +18,31 @@ https://threejs.org/
 - Vue.js  
 https://ja.vuejs.org/
 
+## ローカル実行
+
+```bash
+cd webapp
+firebase emulators:start
+
+open http://localhost:5000/login
+```
+
 # デプロイ
 
 ```bash
 cd webapp
+
+# ログイン切り替え
+firebase login:list
+firebase login:use xxxx@gmail.com
+
+# プロジェクト一覧の確認
+firebase projects:list
+
+# プロジェクトの選択
+firebase use <project-id>
+firebase use cluster-accessory-creator
+
 firebase deploy
 
 # firebase deploy --only functions

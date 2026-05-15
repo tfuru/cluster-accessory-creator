@@ -13,6 +13,7 @@
   "dependencies": {
     "bulma": "^1.0.1",
     "core-js": "^3.8.3",
+    "firebase": "^12.13.0",
     "font-awesome": "^4.7.0",
     "jszip": "^3.10.1",
     "localStorage": "^1.0.4",
