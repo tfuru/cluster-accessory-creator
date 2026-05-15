@@ -1,8 +1,8 @@
 <template>
   <div class="top-editor">
-    <div class="columns is-gapless mb-0 editor-main">
+    <div class="columns is-variable is-3 mb-0 editor-main">
       <!-- 左側: 3Dプレビュー (固定) -->
-      <div class="column is-5-widescreen is-6-desktop is-12-tablet preview-column p-4">
+      <div class="column is-5-widescreen is-6-desktop is-12-tablet preview-column p-4 has-background-light">
         <div class="sticky-preview">
           <div class="card editor-card is-flex is-flex-direction-column h-100">
             <!-- 構成ヘッダー -->
