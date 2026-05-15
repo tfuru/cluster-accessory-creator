@@ -35,7 +35,9 @@ def proxy():
     client = upload_api_client.UploadApiClient(accessToken)
     result = client.upload_accessory(thumbnail_blob=thumbnail_blob, pitm_blob=glb_blob)
 
-    return json.dumps(result)
+    res = flask.Response(json.dumps(result), mimetype="application/json")
+    res.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
+    return res
 
 @https_fn.on_request()
 def api(req: https_fn.Request) -> https_fn.Response:
