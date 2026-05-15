@@ -7,6 +7,14 @@
     <base href="/">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>アクセサリークリエイター - cluster向け 簡単アクセサリー作成ツール</title>
+    <script>
+      window.firebase = {
+        initializeApp: function(config) {
+          window.firebaseConfig = config;
+        }
+      };
+    </script>
+    <script src="/__/firebase/init.js"></script>
   </head>
   <body>
     <noscript>

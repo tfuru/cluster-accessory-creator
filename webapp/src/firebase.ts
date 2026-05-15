@@ -4,7 +4,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 // TODO: Firebase コンソールから取得した設定に置き換えてください
-const firebaseConfig = {
+const fallbackConfig = {
   apiKey: "AIzaSyC7TC7rWs3oYulch2aOv7400rNLHH_9uCw",
   authDomain: "cluster-accessory-creator.firebaseapp.com",
   projectId: "cluster-accessory-creator",
@@ -13,6 +13,8 @@ const firebaseConfig = {
   appId: "1:1049894281160:web:470cb7ced6688eb509eafd",
   measurementId: "G-BVECM89QS3"
 };
+
+const firebaseConfig = (window as any).firebaseConfig || fallbackConfig;
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
