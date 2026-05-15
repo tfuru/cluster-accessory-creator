@@ -11,10 +11,10 @@ from firebase_functions import https_fn, options
 from firebase_admin import initialize_app
 import flask
 from flask_cors import CORS
-
 import os
 import json
 import upload_api_client
+import requests
 
 initialize_app()
 options.set_global_options(region=options.SupportedRegion.ASIA_NORTHEAST1)

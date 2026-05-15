@@ -9,11 +9,28 @@
         </div>
 
         <div class="navbar-menu is-active">
-          <div class="navbar-end">
-            <router-link class="navbar-item" to="/">ホーム</router-link>
+          <div class="navbar-start" v-if="user">
+            <router-link class="navbar-item" to="/dashboard">ダッシュボード</router-link>
             <router-link class="navbar-item" to="/settings">設定</router-link>
-            <router-link class="navbar-item" to="/about">使い方</router-link>
-            <a class="navbar-item" href="https://forms.gle/pz1HamLdBKB5RrHq7" target="_blank">アイテム応募</a>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="field is-grouped">
+                <p class="control">
+                  <router-link class="button is-ghost" to="/">ホーム</router-link>
+                </p>
+                <p class="control">
+                  <router-link class="button is-ghost" to="/about">使い方</router-link>
+                </p>
+                <p class="control">
+                  <a class="button is-ghost" href="https://forms.gle/pz1HamLdBKB5RrHq7" target="_blank">アイテム応募</a>
+                </p>
+                <p class="control" v-if="user">
+                  <button class="button is-light is-rounded" @click="logout">ログアウト</button>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -22,6 +39,34 @@
     <router-view/>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { auth } from './firebase';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+
+export default defineComponent({
+  name: 'App',
+  setup() {
+    const user = ref<User | null>(null);
+    const router = useRouter();
+
+    onMounted(() => {
+      onAuthStateChanged(auth, (u) => {
+        user.value = u;
+      });
+    });
+
+    const logout = async () => {
+      await signOut(auth);
+      router.push('/login');
+    };
+
+    return { user, logout };
+  },
+});
+</script>
 
 <style>
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
