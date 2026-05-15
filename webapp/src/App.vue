@@ -9,16 +9,14 @@
         </div>
 
         <div class="navbar-menu is-active">
-          <div class="navbar-start" v-if="user">
-            <router-link class="navbar-item" to="/dashboard">ダッシュボード</router-link>
-            <router-link class="navbar-item" to="/settings">設定</router-link>
-          </div>
-
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="field is-grouped">
-                <p class="control">
-                  <router-link class="button is-ghost" to="/">ホーム</router-link>
+                <p class="control" v-if="user">
+                  <router-link class="button is-ghost" to="/dashboard">ダッシュボード</router-link>
+                </p>
+                <p class="control" v-if="user">
+                  <router-link class="button is-ghost" to="/settings">設定</router-link>
                 </p>
                 <p class="control">
                   <router-link class="button is-ghost" to="/about">使い方</router-link>
