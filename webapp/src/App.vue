@@ -1,16 +1,23 @@
 <template>
-  <div class="content">
+  <div id="app">
+    <nav class="navbar is-white border-bottom mb-5" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <router-link class="navbar-item has-text-weight-bold is-size-5" to="/">
+            Accessory Creator
+          </router-link>
+        </div>
 
-    <div class="columns">
-      <div class="column is-12-mobile is-half-desktop is-offset-one-quarter-desktop">
-        <nav>
-          <router-link to="/">ホーム</router-link>
-          | <router-link to="/about">使い方</router-link>
-          | <a href="https://forms.gle/pz1HamLdBKB5RrHq7">アイテム応募</a>
-        </nav>        
+        <div class="navbar-menu is-active">
+          <div class="navbar-end">
+            <router-link class="navbar-item" to="/">ホーム</router-link>
+            <router-link class="navbar-item" to="/about">使い方</router-link>
+            <a class="navbar-item" href="https://forms.gle/pz1HamLdBKB5RrHq7" target="_blank">アイテム応募</a>
+          </div>
+        </div>
       </div>
-    </div>
-
+    </nav>
+    
     <router-view/>
   </div>
 </template>
@@ -23,16 +30,16 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  /* color: #2c3e50; */
+  color: #2c3e50;
+  min-height: 100vh;
+  background-color: #fafafa;
 }
 
-nav {
-  padding: 20px;
-  /* background-color: #f0f0f0; */
-  a {
-    font-size: large;
-  }
+.border-bottom {
+  border-bottom: 1px solid #eee !important;
 }
 
+.navbar-item {
+  font-weight: 500;
+}
 </style>
