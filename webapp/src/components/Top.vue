@@ -191,7 +191,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, watch } from 'vue';
 
 import localStorage from 'localStorage';
 import { auth, googleProvider, db } from '../firebase';
@@ -252,13 +252,19 @@ export default defineComponent({
       { name: "kimoneze", label: "キモネーゼ" },
     ];
 
-    const textureSrc = ref("");
-    textureSrc.value = require('@/assets/512x512.png');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const defaultImage = require('@/assets/512x512.png');
+    const textureSrc = ref(defaultImage);
+    const thumbnailSrc = ref(defaultImage);
 
     const accessoryTemplateName = ref("");
     const modelView = ref<TypeModelView | null>(null);
-    const thumbnailSrc = ref("");
-    thumbnailSrc.value = require("@/assets/512x512.png");
+
+    watch(accessoryTemplateName, () => {
+      // テンプレート変更時に画像を初期化
+      textureSrc.value = defaultImage;
+      thumbnailSrc.value = defaultImage;
+    });
 
     const accessToken = ref("");
     const accessoryName = ref("");
