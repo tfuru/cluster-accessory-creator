@@ -180,11 +180,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useRoute } from 'vue-router';
 
 import localStorage from 'localStorage';
-import { auth, googleProvider, db } from '../firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useRoute } from 'vue-router';
-
 import ModelView from './modules/ModelView.vue';
 import CreatorKitItemApi from './modules/CreatorKitItemApi';
 import AccessoryService from './modules/AccessoryService';

@@ -22,34 +22,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { auth } from './firebase';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { useRouter } from 'vue-router';
-
-export default defineComponent({
-  name: 'App',
-  setup() {
-    const user = ref<User | null>(null);
-    const router = useRouter();
-
-    onMounted(() => {
-      onAuthStateChanged(auth, (u) => {
-        user.value = u;
-      });
-    });
-
-    const logout = async () => {
-      await signOut(auth);
-      router.push('/login');
-    };
-
-    return { user, logout };
-  },
-});
-</script>
-
 <style>
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../node_modules/bulma/css/bulma.css";
